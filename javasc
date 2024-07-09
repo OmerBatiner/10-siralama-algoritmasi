@@ -1,180 +1,3 @@
-// HTML dosyasında yer alan düzenlemeler
-const body = document.body;
-const settingsButton = document.getElementById('settingsButton');
-const settingsPanel = document.getElementById('settingsPanel');
-const themeSelect = document.getElementById('themeSelect');
-const languageSelect = document.getElementById('languageSelect');
-const sortButtons = document.querySelectorAll('.top-panel button');
-
-// Ayarlar panelini gösterme/gizleme işlevi
-settingsButton.addEventListener('click', () => {
-    if (settingsPanel.style.display === 'block') {
-        settingsPanel.style.display = 'none';
-    } else {
-        settingsPanel.style.display = 'block';
-    }
-});
-
-// Tema seçimi işlevi
-themeSelect.addEventListener('change', () => {
-    if (themeSelect.value === 'dark') {
-        body.classList.remove('theme-light');
-        body.classList.add('theme-dark');
-        settingsPanel.style.backgroundColor = 'rgba(0, 0, 0, 0.9)'; // Siyah arka plan
-        sortButtons.forEach(button => {
-            button.classList.add('theme-dark');
-        });
-    } else {
-        body.classList.remove('theme-dark');
-        body.classList.add('theme-light');
-        settingsPanel.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Beyaz arka plan
-        sortButtons.forEach(button => {
-            button.classList.remove('theme-dark');
-        });
-    }
-});
-
-// Dil seçimi işlevi (örnek)
-languageSelect.addEventListener('change', () => {
-    if (languageSelect.value === 'tr') {
-        // Türkçe diline geçiş yapılacak işlemler burada yapılabilir
-        alert('Dil Türkçe olarak değiştirildi.');
-    } else {
-        // İngilizce diline geçiş yapılacak işlemler burada yapılabilir
-        alert('Language changed to English.');
-    }
-});
-
-// Bubble Sort
-function bubbleSort(arr) {
-    let n = arr.length;
-    let steps = []; // Adım adım işlemleri saklamak için dizi
-
-    for (let i = 0; i < n - 1; i++) {
-        for (let j = 0; j < n - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                // Swap arr[j] and arr[j + 1]
-                let temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
-
-                // Adımı kaydet
-                steps.push(`Swap ${arr[j]} and ${arr[j + 1]}`);
-            }
-        }
-    }
-
-    return steps;
-}
-
-// UI Elements
-const bubbleSortBtn = document.getElementById('bubbleSortBtn');
-const arrayInput = document.getElementById('arrayInput');
-const sortButtonElement = document.getElementById('sortButton');
-const sortedArray = document.getElementById('sortedArray');
-const algorithmSteps = document.querySelector('.algorithm-steps');
-
-// Event Listeners
-bubbleSortBtn.addEventListener('click', function() {
-    // Show algorithm description and steps
-    document.getElementById('bubbleSort').style.display = 'flex';
-    algorithmSteps.innerHTML = ''; // Önceki adımları temizle
-});
-
-sortButtonElement.addEventListener('click', function() {
-    let inputArray = arrayInput.value.split(',').map(num => parseInt(num));
-    let arrayCopy = [...inputArray];
-
-    // Perform Bubble Sort
-    let steps = bubbleSort(arrayCopy);
-
-    // Display sorted array
-    sortedArray.textContent = arrayCopy.join(', ');
-
-    // Display steps
-    displaySteps(steps);
-});
-
-// Adımları gösteren fonksiyon
-function displaySteps(steps) {
-    algorithmSteps.innerHTML = ''; // Önceki adımları temizle
-
-    steps.forEach((step, index) => {
-        let p = document.createElement('p');
-        p.textContent = `Step ${index + 1}: ${step}`;
-        algorithmSteps.appendChild(p);
-    });
-}
-// Selection Sort algoritması
-function selectionSort(arr) {
-    const len = arr.length;
-    let steps = []; // Adım adım işlemleri saklamak için dizi
-
-    for (let i = 0; i < len - 1; i++) {
-        let minIndex = i;
-        for (let j = i + 1; j < len; j++) {
-            if (arr[j] < arr[minIndex]) {
-                minIndex = j;
-            }
-        }
-        if (minIndex !== i) {
-            // Swap arr[i] and arr[minIndex]
-            let temp = arr[i];
-            arr[i] = arr[minIndex];
-            arr[minIndex] = temp;
-
-            // Adımı kaydet
-            steps.push(`Swap ${arr[i]} and ${arr[minIndex]}`);
-        }
-    }
-
-    // Sonucu döndür
-    return { sortedArray: arr, steps: steps };
-}
-
-// UI Elements
-const selectionSortBtn = document.getElementById('selectionSortBtn');
-const algorithmStepsSelection = document.querySelector('.algorithm-steps-selection');
-
-// Selection Sort butonuna tıklama işlevi
-selectionSortBtn.addEventListener('click', function() {
-    // Gösterilecek algoritma adı ve adım adım açıklama
-    document.getElementById('selectionSort').style.display = 'flex';
-    algorithmStepsSelection.innerHTML = ''; // Önceki adımları temizle
-
-    // Girdi dizisi al
-    let inputArray = arrayInput.value.split(',').map(num => parseInt(num));
-    let arrayCopy = [...inputArray];
-
-    // Selection Sort'u uygula
-    let { sortedArray, steps } = selectionSort(arrayCopy);
-
-    // Sıralanmış diziyi göster
-    sortedArray.textContent = arrayCopy.join(', ');
-
-    // Adımları göster
-    displaySteps(steps, algorithmStepsSelection);
-});
-
-// Adımları gösteren fonksiyon
-function displaySteps(steps, container) {
-    steps.forEach((step, index) => {
-        let p = document.createElement('p');
-        p.textContent = `Step ${index + 1}: ${step}`;
-        container.appendChild(p);
-    });
-}
-
-// Adımları gösteren fonksiyon
-function displaySteps(steps) {
-    steps.forEach((step, index) => {
-        let p = document.createElement('p');
-        p.textContent = `Step ${index + 1}: ${step}`;
-        algorithmSteps.appendChild(p);
-    });
-}
-
-
 document.addEventListener('DOMContentLoaded', function() {
     const body = document.body;
     const settingsButton = document.getElementById('settingsButton');
@@ -198,14 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (themeSelect.value === 'dark') {
             body.classList.remove('theme-light');
             body.classList.add('theme-dark');
-            settingsPanel.style.backgroundColor = 'rgba(0, 0, 0, 0.9)'; // Siyah arka plan
+            settingsPanel.classList.add('dark-theme');
             sortButtons.forEach(button => {
                 button.classList.add('theme-dark');
             });
         } else {
             body.classList.remove('theme-dark');
             body.classList.add('theme-light');
-            settingsPanel.style.backgroundColor = 'rgba(255, 255, 255, 0.9)'; // Beyaz arka plan
+            settingsPanel.classList.remove('dark-theme');
             sortButtons.forEach(button => {
                 button.classList.remove('theme-dark');
             });
@@ -236,14 +59,180 @@ document.addEventListener('DOMContentLoaded', function() {
             // İlgili algoritma konteynerını göster
             const algorithmContainer = document.getElementById(algorithmId);
             algorithmContainer.style.display = 'flex';
+
+            // Adım adım açıklama ve sıralama işlevlerini çağır
+            switch (algorithmId) {
+                case 'bubbleSort':
+                    bubbleSortSteps();
+                    break;
+                case 'selectionSort':
+                    selectionSortSteps();
+                    break;
+                case 'insertionSort':
+                    insertionSortSteps();
+                    break;
+                default:
+                    break;
+            }
         });
     });
+
+    // Bubble Sort adım adım açıklama ve sıralama işlevi
+    function bubbleSortSteps() {
+        const arrayInput = document.getElementById('arrayInput');
+        const sortButton = document.getElementById('sortButton');
+        const sortedArray = document.getElementById('sortedArray');
+        const algorithmSteps = document.querySelector('.algorithm-steps');
+
+        sortButton.addEventListener('click', function() {
+            let inputArray = arrayInput.value.split(',').map(num => parseInt(num));
+            let arrayCopy = [...inputArray];
+
+            // Perform Bubble Sort
+            let steps = bubbleSort(arrayCopy);
+
+            // Display sorted array
+            sortedArray.textContent = arrayCopy.join(', ');
+
+            // Display steps
+            displaySteps(steps, algorithmSteps);
+        });
+
+        // Bubble Sort algorithm
+        function bubbleSort(arr) {
+            let n = arr.length;
+            let steps = [];
+
+            for (let i = 0; i < n - 1; i++) {
+                for (let j = 0; j < n - i - 1; j++) {
+                    if (arr[j] > arr[j + 1]) {
+                        // Swap arr[j] and arr[j + 1]
+                        let temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+
+                        // Record the step
+                        steps.push(`Swap ${arr[j]} and ${arr[j + 1]}`);
+                    }
+                }
+            }
+
+            return steps;
+        }
+    }
+
+    // Selection Sort adım adım açıklama ve sıralama işlevi
+    function selectionSortSteps() {
+        const arrayInput = document.getElementById('arrayInput');
+        const sortButton = document.getElementById('sortButton');
+        const sortedArray = document.getElementById('sortedArray');
+        const algorithmSteps = document.querySelector('.algorithm-steps-selection');
+
+        sortButton.addEventListener('click', function() {
+            let inputArray = arrayInput.value.split(',').map(num => parseInt(num));
+            let arrayCopy = [...inputArray];
+
+            // Perform Selection Sort
+            let { sortedArray, steps } = selectionSort(arrayCopy);
+
+            // Display sorted array
+            sortedArray.textContent = arrayCopy.join(', ');
+
+            // Display steps
+            displaySteps(steps, algorithmSteps);
+        });
+
+        // Selection Sort algorithm
+        function selectionSort(arr) {
+            const len = arr.length;
+            let steps = [];
+
+            for (let i = 0; i < len - 1; i++) {
+                let minIndex = i;
+                for (let j = i + 1; j < len; j++) {
+                    if (arr[j] < arr[minIndex]) {
+                        minIndex = j;
+                    }
+                }
+                if (minIndex !== i) {
+                    // Swap arr[i] and arr[minIndex]
+                    let temp = arr[i];
+                    arr[i] = arr[minIndex];
+                    arr[minIndex] = temp;
+
+                    // Record the step
+                    steps.push(`Swap ${arr[i]} and ${arr[minIndex]}`);
+                }
+            }
+
+            return { sortedArray: arr, steps: steps };
+        }
+    }
+
+    // Insertion Sort adım adım açıklama ve sıralama işlevi
+    function insertionSortSteps() {
+        const arrayInput = document.getElementById('arrayInput');
+        const sortButton = document.getElementById('sortButton');
+        const sortedArray = document.getElementById('sortedArray');
+        const algorithmSteps = document.querySelector('.algorithm-steps-insertion');
+
+        sortButton.addEventListener('click', function() {
+            let inputArray = arrayInput.value.split(',').map(num => parseInt(num));
+            let arrayCopy = [...inputArray];
+
+            // Perform Insertion Sort
+            let steps = insertionSort(arrayCopy);
+
+            // Display sorted array
+            sortedArray.textContent = arrayCopy.join(', ');
+
+            // Display steps
+            displaySteps(steps, algorithmSteps);
+        });
+
+        // Insertion Sort algorithm
+        function insertionSort(arr) {
+            const len = arr.length;
+            let steps = [];
+
+            for (let i = 1; i < len; i++) {
+                let key = arr[i];
+                let j = i - 1;
+
+                // Shift elements of arr[0..i-1], that are greater than key, to one position ahead of their current position
+                while (j >= 0 && arr[j] > key) {
+                    arr[j + 1] = arr[j];
+                    j--;
+                }
+                arr[j + 1] = key;
+
+                // Record the step
+                steps.push(`Insert ${key} into position ${j + 1}`);
+            }
+
+            return steps;
+        }
+    }
+
+    // Adımları gösteren fonksiyon
+    function displaySteps(steps, container) {
+        container.innerHTML = ''; // Önceki adımları temizle
+
+        steps.forEach((step, index) => {
+            let p = document.createElement('p');
+            p.textContent = `Step ${index + 1}: ${step}`;
+            container.appendChild(p);
+        });
+    }
 
     // Initial Setup
     const welcomeScreen = document.querySelector('.welcome-screen');
     setTimeout(function() {
         welcomeScreen.style.display = 'none'; // 3 saniye sonra welcome ekranını kaldır
     }, 3000);
+
+    // Ayarlar paneli başlangıçta gizli olmalı
+    settingsPanel.style.display = 'none';
 
     // Set default theme
     const currentTheme = localStorage.getItem('theme') || 'light';

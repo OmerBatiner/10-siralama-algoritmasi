@@ -158,6 +158,7 @@
     <div class="top-panel">
         <button id="bubbleSortBtn">Bubble Sort</button>
         <button id="selectionSortBtn">Selection Sort</button>
+        <button id="insertionSortBtn">Insertion Sort</button>
     </div>
     <div class="vertical-line"></div>
     <div id="settingsButton">⚙️</div>
@@ -202,7 +203,22 @@
             </div>
             <div class="algorithm-steps">
                 <h3>Adımlar:</h3>
-                <p>Selection Sort'un adım adım açıklaması...</p>
+                <div class="algorithm-steps-selection"></div>
+            </div>
+        </div>
+
+        <div id="insertionSort" class="algorithm-container">
+            <div class="algorithm-info">
+                <h2>Insertion Sort</h2>
+                <p class="algorithm-description">
+                    Insertion sort, listedeki elemanları sıralamak için her bir elemanı uygun yere yerleştirir.
+                </p>
+                <p><strong>Zaman Karmaşıklığı:</strong> O(n^2)</p>
+                <p><strong>Yer Karmaşıklığı:</strong> O(1)</p>
+            </div>
+            <div class="algorithm-steps">
+                <h3>Adımlar:</h3>
+                <div class="algorithm-steps-insertion"></div>
             </div>
         </div>
         
@@ -232,25 +248,27 @@
                 }
             });
 
-            // Tema seçimini uygulama işlevi
-            themeSelect.addEventListener('change', () => {
-                if (themeSelect.value === 'dark') {
-                    body.classList.remove('theme-light');
+            // Tema değiştirme işlevi
+            themeSelect.addEventListener('change', (e) => {
+                if (e.target.value === 'dark') {
                     body.classList.add('theme-dark');
-                    settingsPanel.classList.add('dark-theme');
+                    body.classList.remove('theme-light');
                 } else {
-                    body.classList.remove('theme-dark');
                     body.classList.add('theme-light');
-                    settingsPanel.classList.remove('dark-theme');
+                    body.classList.remove('theme-dark');
                 }
             });
 
-            // Dil seçimini uygulama işlevi (gelecekte eklemek için)
-            languageSelect.addEventListener('change', () => {
-                // Dil seçimini burada uygula
+            // Dil değiştirme işlevi
+            languageSelect.addEventListener('change', (e) => {
+                if (e.target.value === 'tr') {
+                    document.documentElement.lang = 'tr';
+                } else {
+                    document.documentElement.lang = 'en';
+                }
             });
 
-            // Sıralama butonlarına tıklama işlevleri
+            // Algoritma butonlarına tıklama işlevleri
             sortButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const algorithmId = this.id.replace('Btn', '');
@@ -272,8 +290,17 @@
                 const arrayInput = document.getElementById('arrayInput').value;
                 const numbers = arrayInput.split(',').map(num => parseInt(num.trim()));
                 
-                // Sıralama algoritması seçimi burada yapılacak (örneğin Bubble Sort)
-                const sortedNumbers = bubbleSort(numbers);
+                // Seçilen algoritmaya göre sıralama yapma
+                const selectedAlgorithm = document.querySelector('.algorithm-container[style*="display: flex"]');
+                const algorithmId = selectedAlgorithm ? selectedAlgorithm.id : null;
+                let sortedNumbers = [];
+                if (algorithmId === 'bubbleSort') {
+                    sortedNumbers = bubbleSort(numbers);
+                } else if (algorithmId === 'selectionSort') {
+                    sortedNumbers = selectionSort(numbers);
+                } else if (algorithmId === 'insertionSort') {
+                    sortedNumbers = insertionSort(numbers);
+                }
 
                 // Sıralanmış diziyi ekrana yazdırma
                 const sortedArray = document.getElementById('sortedArray');
@@ -288,7 +315,6 @@
 
             // Bubble Sort algoritması
             function bubbleSort(arr) {
-                // Bubble Sort algoritması buraya gelecek
                 const len = arr.length;
                 for (let i = 0; i < len - 1; i++) {
                     for (let j = 0; j < len - 1 - i; j++) {
@@ -302,10 +328,10 @@
                 return arr;
             }
 
-            // Selection Sort algoritması
+            // Selection Sort algoritması ve adımları
             function selectionSort(arr) {
-                // Selection Sort algoritması buraya gelecek
                 const len = arr.length;
+                const steps = [];
                 for (let i = 0; i < len - 1; i++) {
                     let minIndex = i;
                     for (let j = i + 1; j < len; j++) {
@@ -317,10 +343,69 @@
                         const temp = arr[i];
                         arr[i] = arr[minIndex];
                         arr[minIndex] = temp;
+                        steps.push(`Adım ${i + 1}: ${arr.join(', ')}`);
                     }
                 }
+                displaySelectionSortSteps(steps);
                 return arr;
             }
+
+            // Selection Sort adımlarını görüntüleme işlevi
+            function displaySelectionSortSteps(steps) {
+                const stepsContainer = document.querySelector('.algorithm-steps-selection');
+                stepsContainer.innerHTML = '';
+                steps.forEach(step => {
+                    const stepElement = document.createElement('p');
+                    stepElement.textContent = step;
+                    stepsContainer.appendChild(stepElement);
+                });
+            }
+
+            // Selection Sort butonuna tıklama işlevi
+            document.getElementById('selectionSortBtn').addEventListener('click', function() {
+                const arrayInput = document.getElementById('arrayInput').value;
+                const numbers = arrayInput.split(',').map(num => parseInt(num.trim()));
+                const sortedNumbers = selectionSort(numbers);
+                document.getElementById('sortedArray').textContent = sortedNumbers.join(', ');
+            });
+
+            // Insertion Sort algoritması ve adımları
+            function insertionSort(arr) {
+                const len = arr.length;
+                const steps = [];
+                for (let i = 1; i < len; i++) {
+                    let key = arr[i];
+                    let j = i - 1;
+                    while (j >= 0 && arr[j] > key) {
+                        arr[j + 1] = arr[j];
+                        j = j - 1;
+                    }
+                    arr[j + 1] = key;
+                    steps.push(`Adım ${i}: ${arr.join(', ')}`);
+                }
+                displayInsertionSortSteps(steps);
+                return arr;
+            }
+
+            // Insertion Sort adımlarını görüntüleme işlevi
+            function displayInsertionSortSteps(steps) {
+                const stepsContainer = document.querySelector('.algorithm-steps-insertion');
+                stepsContainer.innerHTML = '';
+                steps.forEach(step => {
+                    const stepElement = document.createElement('p');
+                    stepElement.textContent = step;
+                    stepsContainer.appendChild(stepElement);
+                });
+            }
+
+            // Insertion Sort butonuna tıklama işlevi
+            document.getElementById('insertionSortBtn').addEventListener('click', function() {
+                const arrayInput = document.getElementById('arrayInput').value;
+                const numbers = arrayInput.split(',').map(num => parseInt(num.trim()));
+                const sortedNumbers = insertionSort(numbers);
+                document.getElementById('sortedArray').textContent = sortedNumbers.join(', ');
+            });
+
         });
     </script>
 </body>

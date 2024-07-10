@@ -3,410 +3,652 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gelişmiş Sıralama Algoritmaları</title>
+    <title>Sıralama Algoritmaları</title>
     <style>
-        /* Stil kodları buraya gelecek */
         body {
             font-family: Arial, sans-serif;
-            transition: background-color 0.5s, color 0.5s;
             margin: 0;
             padding: 0;
-            position: relative;
+            box-sizing: border-box;
         }
-        .theme-light {
-            background-color: #ffffff;
-            color: #1a1a1a;
-        }
-        .theme-dark {
-            background-color: #1a1a1a;
-            color: #767070;
-        }
+
         .top-panel {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            width: calc(100% - 80px);
+            background-color: #9e9999;
             padding: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            background-color: #ffffff;
-        }
-        .top-panel button {
-            margin: 0 5px;
-            padding: 10px;
-            cursor: pointer;
-        }
-        .top-panel.theme-dark {
-            color: #1a1a1a;
-            background-color: #302f2f;
-        }
-        .theme-dark .top-panel button {
-            color: #ffffff;
-            background-color: #1a1a1a;
-            border: rgb(255, 255, 255);
-            cursor: pointer;
-            padding: 10px;
-            margin: 0 5px;
-        }
-        .vertical-line {
-            width: 2px;
-            background-color: #ccc;
-            height: 100vh;
-            position: fixed;
-            right: 80px;
-            top: 0;
-        }
-        #settingsButton {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            padding: 10px;
-            cursor: pointer;
-            z-index: 1000;
+            border-bottom: 1px solid #ccc;
         }
 
-        #settingsPanel {
-            display: none;
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 33%;
-            height: 100vh;
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            z-index: 999;
-            transition: background-color 0.3s ease-in-out;
-        }
-        .dark-theme #settingsPanel {
-            background-color: #1a1a1a;
-            color: #707070;
-        }
-        #settingsPanel h2 {
-            margin-top: 0;
-        }
-        .container {
-            margin-top: 60px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .algorithm-container {
-            display: none;
-            margin-top: 20px;
-            width: 80%;
-            display: flex;
-            justify-content: space-between;
-        }
-        .algorithm-info {
-            width: 48%;
+        .top-panel button {
+            flex: 1;
+            margin: 0 5px;
             padding: 10px;
-            background-color: #f0f0f0;
+            background-color: #1b1b1bc5;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .top-panel button:hover {
+            background-color: #ff000090;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .algorithm-panel {
+            display: none;
+        }
+
+        .algorithm-panel.active {
+            display: block;
+        }
+
+        .algorithm-info, .step-panel, .input-panel, .result-panel, .code-panel, .description-panel {
+            margin-bottom: 20px;
+        }
+
+        .code-panel, .description-panel {
             border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: left;
-        }
-        .algorithm-description {
-            margin-bottom: 10px;
-        }
-        .algorithm-steps {
-            width: 48%;
             padding: 10px;
             background-color: #f9f9f9;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: left;
-            overflow-y: auto;
-            max-height: 300px;
         }
-        .algorithm-steps p {
-            margin: 5px 0;
+
+        .code-panel {
+            float: left;
+            width: 45%;
         }
-        #arrayInput {
-            margin: 20px 0;
-            padding: 10px;
-            font-size: 16px;
-            width: 300px;
-            text-align: center;
+
+        .description-panel {
+            float: right;
+            width: 45%;
         }
-        #sortButton {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        #sortedArrayContainer {
-            margin-top: 20px;
-            padding: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            border: 1px solid #ccc;
-            width: 300px;
-            text-align: center;
-            background-color: #f0f0f0;
-        }
-        #sortedArray {
-            pointer-events: none;
+
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
         }
     </style>
 </head>
-<body class="theme-light">
+<body>
     <div class="top-panel">
-        <button id="bubbleSortBtn">Bubble Sort</button>
-        <button id="selectionSortBtn">Selection Sort</button>
-        <button id="insertionSortBtn">Insertion Sort</button>
+        <button onclick="showAlgorithm('bubble')">Bubble Sort</button>
+        <button onclick="showAlgorithm('selection')">Selection Sort</button>
+        <button onclick="showAlgorithm('insertion')">Insertion Sort</button>
+        <button onclick="showAlgorithm('merge')">Merge Sort</button>
+        <button onclick="showAlgorithm('quick')">Quick Sort</button>
+        <button onclick="showAlgorithm('heap')">Heap Sort</button>
+        <button onclick="showAlgorithm('counting')">Counting Sort</button>
+        <button onclick="showAlgorithm('shell')">Shell Sort</button>
+        <button onclick="showAlgorithm('tim')">Tim Sort</button>
+        <button onclick="showAlgorithm('radix')">Radix Sort</button>
     </div>
-    <div class="vertical-line"></div>
-    <div id="settingsButton">⚙️</div>
-    <div id="settingsPanel">
-        <h2>Ayarlar</h2>
-        <label for="themeSelect">Tema:</label>
-        <select id="themeSelect">
-            <option value="light">Açık</option>
-            <option value="dark">Koyu</option>
-        </select>
-        <br><br>
-        <label for="languageSelect">Dil:</label>
-        <select id="languageSelect">
-            <option value="en">İngilizce</option>
-            <option value="tr">Türkçe</option>
-        </select>
-    </div>
+    
     <div class="container">
-        <div id="bubbleSort" class="algorithm-container">
+        <div id="welcome-panel">
+            <h1>Hoşgeldiniz</h1>
+            <p>Sıralama algoritmalarını görmek için yukarıdaki butonlardan birine tıklayın.</p>
+        </div>
+
+        <div id="bubble" class="algorithm-panel">
             <div class="algorithm-info">
                 <h2>Bubble Sort</h2>
-                <p class="algorithm-description">
-                    Bubble sort, listedeki elemanları karşılaştırır ve gerektiğinde yer değiştirir.
-                </p>
-                <p><strong>Zaman Karmaşıklığı:</strong> O(n^2)</p>
-                <p><strong>Yer Karmaşıklığı:</strong> O(1)</p>
+                <p> En iyi durum: O(n)
+                    Ortalama durum: O(n^2)
+                    En kötü durum: O(n^2)
+                    Karmaşıklık denklemi: O(n^2)</p>
             </div>
-            <div class="algorithm-steps">
-                <h3>Adımlar:</h3>
-                <p>Bubble Sort'un adım adım açıklaması...</p>
+            <div class="step-panel">
+                <h3>Adım Adım Gösterim</h3>
+                <div id="bubble-steps"></div>
             </div>
+            <div class="input-panel">
+                <h3>Dizi Girişi</h3>
+                <input type="text" id="bubble-input" placeholder="Ör: 5,3,8,6,2">
+                <button onclick="sortBubble()">Sırala</button>
+            </div>
+            <div class="result-panel">
+                <h3>Sıralanmış Dizi</h3>
+                <div id="bubble-result"></div>
+                <button onclick="clearBubble()">Temizle</button>
+            </div>
+            <div class="code-panel">
+                <h3>BubbleSort(dizi):<br>
+                    n = dizi.length<br>
+                    for i from 0 to n-1:<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        for j from 0 to n-i-1:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            if dizi[j] > dizi[j+1]:<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                dizi[j], dizi[j+1] = dizi[j+1], dizi[j]
+                </h3>
+            </div>
+            <div class="description-panel">
+                <h3>Bubble Sort, dizideki her çift elemanı karşılaştırarak büyük olanı sağa doğru iter.
+                    Her iterasyonda en büyük eleman, sıralı kısmın sonuna yerleştirilir.
+                    Bu işlem dizinin sonuna kadar tekrarlanarak dizi sıralanır.</h3>
+            </div>
+            <div class="clearfix"></div>
         </div>
-        
-        <div id="selectionSort" class="algorithm-container">
+
+        <div id="selection" class="algorithm-panel">
             <div class="algorithm-info">
                 <h2>Selection Sort</h2>
-                <p class="algorithm-description">
-                    Selection sort, listedeki elemanları sıralı ve sırasız olarak böler.
-                </p>
-                <p><strong>Zaman Karmaşıklığı:</strong> O(n^2)</p>
-                <p><strong>Yer Karmaşıklığı:</strong> O(1)</p>
+                <p>En iyi durum: O(n^2)
+                    Ortalama durum: O(n^2)
+                    En kötü durum: O(n^2)
+                    Karmaşıklık denklemi: O(n^2)</p>
             </div>
-            <div class="algorithm-steps">
-                <h3>Adımlar:</h3>
-                <div class="algorithm-steps-selection"></div>
+            <div class="step-panel">
+                <h3>Adım Adım Gösterim</h3>
+                <div id="selection-steps"></div>
             </div>
+            <div class="input-panel">
+                <h3>Dizi Girişi</h3>
+                <input type="text" id="selection-input" placeholder="Ör: 5,3,8,6,2">
+                <button onclick="sortSelection()">Sırala</button>
+            </div>
+            <div class="result-panel">
+                <h3>Sıralanmış Dizi</h3>
+                <div id="selection-result"></div>
+                <button onclick="clearSelection()">Temizle</button>
+            </div>
+            <div class="code-panel">
+                <h3>SelectionSort(dizi):<br>
+                    n = dizi.length<br>
+                    for i from 0 to n-1:<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        min_index = i<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        for j from i+1 to n-1:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            if dizi[j] < dizi[min_index]:<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                min_index = j<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        dizi[i], dizi[min_index] = dizi[min_index], dizi[i]
+                </h3>
+            </div>
+            <div class="description-panel">
+                <h3>Selection Sort, dizinin en küçük (ya da en büyük) elemanını bulup sıralı kısmın sonuna ekler.
+                    Her adımda sıralı kısım genişler ve sıralanmış elemanlar arasında en küçük (ya da en büyük) elemanı seçer.
+                    Bu işlem dizinin tamamı için tekrarlanarak dizi sıralanır.
+                    En iyi, ortalam ve en kötü durumlarda O(n^2) zaman karmaşıklığına sahiptir.</h3>
+            </div>
+            <div class="clearfix"></div>
         </div>
 
-        <div id="insertionSort" class="algorithm-container">
+        <div id="insertion" class="algorithm-panel">
             <div class="algorithm-info">
                 <h2>Insertion Sort</h2>
-                <p class="algorithm-description">
-                    Insertion sort, listedeki elemanları sıralamak için her bir elemanı uygun yere yerleştirir.
-                </p>
-                <p><strong>Zaman Karmaşıklığı:</strong> O(n^2)</p>
-                <p><strong>Yer Karmaşıklığı:</strong> O(1)</p>
+                <p>En iyi durum: O(n)
+                    Ortalama durum: O(n^2)
+                    En kötü durum: O(n^2)
+                    Karmaşıklık denklemi: O(n^2)</p>
             </div>
-            <div class="algorithm-steps">
-                <h3>Adımlar:</h3>
-                <div class="algorithm-steps-insertion"></div>
+            <div class="step-panel">
+                <h3>Adım Adım Gösterim</h3>
+                <div id="insertion-steps"></div>
             </div>
+            <div class="input-panel">
+                <h3>Dizi Girişi</h3>
+                <input type="text" id="insertion-input" placeholder="Ör: 5,3,8,6,2">
+                <button onclick="sortInsertion()">Sırala</button>
+            </div>
+            <div class="result-panel">
+                <h3>Sıralanmış Dizi</h3>
+                <div id="insertion-result"></div>
+                <button onclick="clearInsertion()">Temizle</button>
+            </div>
+            <div class="code-panel">
+                <h3>InsertionSort(dizi):<br>
+                    n = dizi.length<br>
+                    for i from 1 to n-1:<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        key = dizi[i]<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        j = i - 1<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        while j >= 0 and dizi[j] > key:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            dizi[j+1] = dizi[j]<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            j = j - 1<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        dizi[j+1] = key
+                </h3>
+            </div>
+            <div class="description-panel">
+                <h3>Insertion Sort, diziyi sıralı ve sırasız olarak ikiye böler.
+                    Sırasız kısımdaki elemanlar, sıralı kısımdaki elemanlarla karşılaştırılarak doğru konuma yerleştirilir.
+                    Her adımda bir eleman sıralı kısmın sonuna eklenir.
+                    Bu işlem dizinin tamamı için tekrarlanarak dizi sıralanır.
+                    En iyi durumda O(n), en kötü durumda O(n^2) zaman karmaşıklığına sahiptir.</h3>
+            </div>
+            <div class="clearfix"></div>
         </div>
-        
-        <input type="text" id="arrayInput" placeholder="Virgülle ayrılmış sayıları girin">
-        <button id="sortButton">Sırala</button>
-        <div id="sortedArrayContainer">
-            <div id="sortedArray">Sıralanmış dizi burada gösterilecek.</div>
-            <button id="clearButton">Temizle</button>
+
+        <div id="merge" class="algorithm-panel">
+            <div class="algorithm-info">
+                <h2>Merge Sort</h2>
+                <p>En iyi durum: O(n log n)
+                    Ortalama durum: O(n log n)
+                    En kötü durum: O(n log n)
+                    Karmaşıklık denklemi: O(n log n)
+                    </p>
+            </div>
+            <div class="step-panel">
+                <h3>Adım Adım Gösterim</h3>
+                <div id="merge-steps"></div>
+            </div>
+            <div class="input-panel">
+                <h3>Dizi Girişi</h3>
+                <input type="text" id="merge-input" placeholder="Ör: 5,3,8,6,2">
+                <button onclick="sortMerge()">Sırala</button>
+            </div>
+            <div class="result-panel">
+                <h3>Sıralanmış Dizi</h3>
+                <div id="merge-result"></div>
+                <button onclick="clearMerge()">Temizle</button>
+            </div>
+            <div class="code-panel">
+                <h3>MergeSort(dizi):<br>
+                    if dizi.length > 1:<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        orta = dizi.length / 2<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        sol_dizi = dizi[0...orta-1]<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        sag_dizi = dizi[orta...dizi.length-1]<br>
+                        <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        MergeSort(sol_dizi)<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        MergeSort(sag_dizi)<br>
+                        <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        Merge(sol_dizi, sag_dizi, dizi)<br>
+                    <br>
+                    Merge(sol_dizi, sag_dizi, dizi):<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        i = 0, j = 0, k = 0
+                        <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        while i < sol_dizi.length and j < sag_dizi.length:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            if sol_dizi[i] <= sag_dizi[j]:<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                dizi[k] = sol_dizi[i]<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                i = i + 1<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            else:<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                dizi[k] = sag_dizi[j]<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                j = j + 1<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            k = k + 1<br>
+                            <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        while i < sol_dizi.length:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            dizi[k] = sol_dizi[i]<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            i = i + 1<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            k = k + 1<br>
+                            <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        while j < sag_dizi.length:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            dizi[k] = sag_dizi[j]<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            j = j + 1<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            k = k + 1
+                </h3>
+            </div>
+            <div class="description-panel">
+                <h3>Merge Sort, diziyi tek elemanlı alt dizilere bölerek başlar.
+                    Ardından her alt diziyi sıralı olarak birleştirir.
+                    Birleştirme işlemi, tek elemanlı alt diziler sıralı hale gelene kadar devam eder.
+                    En iyi, ortalam ve en kötü durumlarda O(n log n) zaman karmaşıklığına sahiptir.
+                    </h3>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <div id="quick" class="algorithm-panel">
+            <div class="algorithm-info">
+                <h2>Quick Sort</h2>
+                <p>En iyi durum: O(n log n)
+                    Ortalama durum: O(n log n)
+                    En kötü durum: O(n^2)
+                    Karmaşıklık denklemi: O(n log n)</p>
+            </div>
+            <div class="step-panel">
+                <h3>Adım Adım Gösterim</h3>
+                <div id="quick-steps"></div>
+            </div>
+            <div class="input-panel">
+                <h3>Dizi Girişi</h3>
+                <input type="text" id="quick-input" placeholder="Ör: 5,3,8,6,2">
+                <button onclick="sortQuick()">Sırala</button>
+            </div>
+            <div class="result-panel">
+                <h3>Sıralanmış Dizi</h3>
+                <div id="quick-result"></div>
+                <button onclick="clearQuick()">Temizle</button>
+            </div>
+            <div class="code-panel">
+                <h3>QuickSort(dizi, baslangic, bitis):<br>
+                    if baslangic < bitis:<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        pivot_index = Partition(dizi, baslangic, bitis)<br>
+                        <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        QuickSort(dizi, baslangic, pivot_index-1)<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        QuickSort(dizi, pivot_index+1, bitis)<br>
+                    <br>
+                    Partition(dizi, baslangic, bitis):<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        pivot_value = dizi[bitis]<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        i = baslangic - 1<br>
+                        <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        for j from baslangic to bitis-1:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            if dizi[j] <= pivot_value:<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                i = i + 1<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                dizi[i], dizi[j] = dizi[j], dizi[i]<br>
+                                <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        dizi[i+1], dizi[bitis] = dizi[bitis], dizi[i+1]<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        return i + 1
+                </h3>
+            </div>
+            <div class="description-panel">
+                <h3>Quick Sort, bir pivot eleman seçer ve bu pivot eleman etrafında diziyi küçük ve büyük alt dizilere ayırır.
+                    Her alt dizi için aynı işlem tekrarlanarak sıralama yapılır.
+                    Pivot eleman, doğru konuma geldiğinde dizi sıralanmış olur.
+                    En iyi ve ortalamada O(n log n), en kötü durumda O(n^2) zaman karmaşıklığına sahiptir.                    
+                    </h3>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    
+        <div id="heap" class="algorithm-panel">
+            <div class="algorithm-info">
+                <h2>Heap Sort</h2>
+                <p>En iyi durum: O(n log n)
+                    Ortalama durum: O(n log n)
+                    En kötü durum: O(n log n)
+                    Karmaşıklık denklemi: O(n log n)</p>
+            </div>
+            <div class="step-panel">
+                <h3>Adım Adım Gösterim</h3>
+                <div id="heap-steps"></div>
+            </div>
+            <div class="input-panel">
+                <h3>Dizi Girişi</h3>
+                <input type="text" id="heap-input" placeholder="Ör: 5,3,8,6,2">
+                <button onclick="sortHeap()">Sırala</button>
+            </div>
+            <div class="result-panel">
+                <h3>Sıralanmış Dizi</h3>
+                <div id="heap-result"></div>
+                <button onclick="clearHeap()">Temizle</button>
+            </div>
+            <div class="code-panel">
+                <h3>HeapSort(dizi):<br>
+                    n = dizi.length<br>
+                    <br>
+                    for i from n/2 - 1 down to 0:<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        Heapify(dizi, n, i)<br>
+                    <br>
+                    for i from n-1 down to 0:<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        dizi[0], dizi[i] = dizi[i], dizi[0]<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        Heapify(dizi, i, 0)<br>
+                    <br>
+                    Heapify(dizi, n, i):<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        largest = i<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        left = 2 * i + 1<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        right = 2 * i + 2<br>
+                        <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        if left < n and dizi[left] > dizi[largest]:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            largest = left<br>
+                            <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        if right < n and dizi[right] > dizi[largest]:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            largest = right<br>
+                            <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        if largest != i:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            dizi[i], dizi[largest] = dizi[largest], dizi[i]<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            Heapify(dizi, n, largest)
+                </h3>
+            </div>
+            <div class="description-panel">
+                <h3>Heap Sort, max heap (ya da min heap) yapısını kullanarak sıralama yapar.
+                    Dizi heap olarak düzenlenir ve kök eleman (en büyük ya da en küçük) sıralı kısmın sonuna eklenir.
+                    Heap yeniden düzenlenir ve işlem tekrarlanarak dizi sıralanır.
+                    En iyi, ortalam ve en kötü durumlarda O(n log n) zaman karmaşıklığına sahiptir.</h3>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    
+        <div id="counting" class="algorithm-panel">
+            <div class="algorithm-info">
+                <h2>Counting Sort</h2>
+                <p>En iyi durum: O(n + k)
+                    Ortalama durum: O(n + k)
+                    En kötü durum: O(n + k)
+                    Karmaşıklık denklemi: O(n + k) (n: eleman sayısı, k: max değer)
+                    </p>
+            </div>
+            <div class="step-panel">
+                <h3>Adım Adım Gösterim</h3>
+                <div id="counting-steps"></div>
+            </div>
+            <div class="input-panel">
+                <h3>Dizi Girişi</h3>
+                <input type="text" id="counting-input" placeholder="Ör: 5,3,8,6,2">
+                <button onclick="sortCounting()">Sırala</button>
+            </div>
+            <div class="result-panel">
+                <h3>Sıralanmış Dizi</h3>
+                <div id="counting-result"></div>
+                <button onclick="clearCounting()">Temizle</button>
+            </div>
+            <div class="code-panel">
+                <h3>CountingSort(dizi):<br>
+                    n = dizi.length<br>
+                    output = new Array(n)<br>
+                    count = new Array(256).fill(0)<br>
+                    
+                    for i from 0 to n-1:<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        count[dizi[i]] = count[dizi[i]] + 1<br>
+                        <br>
+                    for i from 1 to 255:<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        count[i] = count[i] + count[i-1]<br>
+                        <br>
+                    for i from n-1 down to 0:<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        output[count[dizi[i]] - 1] = dizi[i]<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        count[dizi[i]] = count[dizi[i]] - 1<br>
+                        <br>
+                    for i from 0 to n-1:<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        dizi[i] = output[i]
+                </h3>
+            </div>
+            <div class="description-panel">
+                <h3>Counting Sort, sıralanacak dizideki her elemanın sayısını hesaplar.
+                    Elemanların sayıları kullanılarak sıralı dizi oluşturulur.
+                    Dizi elemanlarının değerleri arasındaki fark (k) çok büyük olmamalıdır.
+                    En iyi, ortalam ve en kötü durumlarda O(n + k) zaman karmaşıklığına sahiptir.
+                    </h3>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    
+        <div id="shell" class="algorithm-panel">
+            <div class="algorithm-info">
+                <h2>Shell Sort</h2>
+                <p>En iyi durum: O(n log n)
+                    Ortalama durum: O(n (log n)^2)
+                    En kötü durum: O(n (log n)^2)
+                    Karmaşıklık denklemi: O(n (log n)^2)
+                    </p>
+            </div>
+            <div class="step-panel">
+                <h3>Adım Adım Gösterim</h3>
+                <div id="shell-steps"></div>
+            </div>
+            <div class="input-panel">
+                <h3>Dizi Girişi</h3>
+                <input type="text" id="shell-input" placeholder="Ör: 5,3,8,6,2">
+                <button onclick="sortShell()">Sırala</button>
+            </div>
+            <div class="result-panel">
+                <h3>Sıralanmış Dizi</h3>
+                <div id="shell-result"></div>
+                <button onclick="clearShell()">Temizle</button>
+            </div>
+            <div class="code-panel">
+                <h3>ShellSort(dizi):<br>
+                    n = dizi.length<br>
+                    gap = n / 2<br>
+                    <br>
+                    while gap > 0:<br><span style="display: inline-block; margin-left: 40px;">
+                        for i from gap to n-1:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            temp = dizi[i]<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            j = i<br>
+                            <br><span style="display: inline-block; margin-left: 80px;"></span>
+                            while j >= gap and dizi[j - gap] > temp:<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                dizi[j] = dizi[j - gap]<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                j = j - gap<br>
+                                <br><span style="display: inline-block; margin-left: 80px;">
+                            dizi[j] = temp<br>
+                            <br><span style="display: inline-block; margin-left: 40px;">
+                        gap = gap / 2
+                </h3>
+            </div>
+            <div class="description-panel">
+                <h3>Tim Sort, küçük alt diziler oluşturur ve bu alt dizileri Insertion Sort ile sıralar.
+                    Sıralı alt diziler birleştirilir ve büyük diziler oluşturulur.
+                    Birleştirme işlemi, tüm dizinin sıralı hale gelene kadar devam eder.
+                    En iyi, ortalam ve en kötü durumlarda O(n log n) zaman karmaşıklığına sahiptir.</h3>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    
+        <div id="tim" class="algorithm-panel">
+            <div class="algorithm-info">
+                <h2>Tim Sort</h2>
+                <p>En iyi durum: O(n log n)
+                    Ortalama durum: O(n log n)
+                    En kötü durum: O(n log n)
+                    Karmaşıklık denklemi: O(n log n)</p>
+            </div>
+            <div class="step-panel">
+                <h3>Adım Adım Gösterim</h3>
+                <div id="tim-steps"></div>
+            </div>
+            <div class="input-panel">
+                <h3>Dizi Girişi</h3>
+                <input type="text" id="tim-input" placeholder="Ör: 5,3,8,6,2">
+                <button onclick="sortTim()">Sırala</button>
+            </div>
+            <div class="result-panel">
+                <h3>Sıralanmış Dizi</h3>
+                <div id="tim-result"></div>
+                <button onclick="clearTim()">Temizle</button>
+            </div>
+            <div class="code-panel">
+                <h3>TimSort(dizi):<br>
+                    n = dizi.length<br>
+                    min_run = 32<br>
+                    <br>
+                    for i from 0 to n step min_run:<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        InsertionSort(dizi, i, min(min_run + i - 1, n-1))<br>
+                    <br>
+                    size = min_run<br>
+                    while size < n:<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        for left from 0 to n step 2*size:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            mid = left + size - 1<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            right = min((left + 2*size - 1), (n - 1))<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            Merge(dizi, left, mid, right)<br>
+                            <br><span style="display: inline-block; margin-left: 40px;">    
+                        size = 2 * size<br>
+                                <br>
+                    Merge(dizi, sol, orta, sag):<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        n1 = orta - sol + 1<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        n2 = sag - orta<br>
+                        <br><span style="display: inline-block; margin-left: 40px;">
+                        L = new Array(n1)<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        R = new Array(n2)<br>
+                        <br><span style="display: inline-block; margin-left: 40px;">
+                        for i from 0 to n1-1:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            L[i] = dizi[sol + i]<br>
+                            <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        for j from 0 to n2-1:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            R[j] = dizi[orta + 1 + j]<br>
+                            <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        i = 0, j = 0<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        k = sol<br>
+                        <br><span style="display: inline-block; margin-left: 40px;">
+                        while i < n1 and j < n2:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            if L[i] <= R[j]:<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                dizi[k] = L[i]<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                i = i + 1<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            else:<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                dizi[k] = R[j]<br><span style="display: inline-block; margin-left: 120px;"></span>
+                                j = j + 1<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            k = k + 1<br>
+                            <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        while i < n1:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            dizi[k] = L[i]<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            i = i + 1<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            k = k + 1<br>
+                            <br><span style="display: inline-block; margin-left: 40px;"></span>
+                        while j < n2:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            dizi[k] = R[j]<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            j = j + 1<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            k = k + 1
+                </h3>
+            </div>
+            <div class="description-panel">
+                <h3>Tim Sort, küçük alt diziler oluşturur ve bu alt dizileri Insertion Sort ile sıralar.
+                    Sıralı alt diziler birleştirilir ve büyük diziler oluşturulur.
+                    Birleştirme işlemi, tüm dizinin sıralı hale gelene kadar devam eder.
+                    En iyi, ortalam ve en kötü durumlarda O(n log n) zaman karmaşıklığına sahiptir.</h3>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    
+        <div id="radix" class="algorithm-panel">
+            <div class="algorithm-info">
+                <h2>Radix Sort</h2>
+                <p>En iyi durum: O(nk)
+                    Ortalama durum: O(nk)
+                    En kötü durum: O(nk)
+                    Karmaşıklık denklemi: O(nk) (n: eleman sayısı, k: basamak sayısı)</p>
+            </div>
+            <div class="step-panel">
+                <h3>Adım Adım Gösterim</h3>
+                <div id="radix-steps"></div>
+            </div>
+            <div class="input-panel">
+                <h3>Dizi Girişi</h3>
+                <input type="text" id="radix-input" placeholder="Ör: 5,3,8,6,2">
+                <button onclick="sortRadix()">Sırala</button>
+            </div>
+            <div class="result-panel">
+                <h3>Sıralanmış Dizi</h3>
+                <div id="radix-result"></div>
+                <button onclick="clearRadix()">Temizle</button>
+            </div>
+            <div class="code-panel">
+                <h3>RadixSort(dizi):<br>
+                    max_deger = max(dizi)<br>
+                    basamak_sayisi = len(str(max_deger))<br>
+                    <br>
+                    for basamak in range(basamak_sayisi):<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        countSort(dizi, basamak)<br>
+                        <br>
+                    countSort(dizi, basamak):<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        n = len(dizi)<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        output = [0] * n<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        count = [0] * 10<br>
+                        <br><span style="display: inline-block; margin-left: 40px;">
+                        for i in range(n):<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            index = (dizi[i] / basamak) % 10<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            count[index] += 1<br>
+                            <br><span style="display: inline-block; margin-left: 40px;">
+                        for i in range(1, 10):<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            count[i] += count[i - 1]<br>
+                            <br><span style="display: inline-block; margin-left: 40px;">
+                        i = n - 1<br><span style="display: inline-block; margin-left: 40px;"></span>
+                        while i >= 0:<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            index = (dizi[i] / basamak) % 10<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            output[count[index] - 1] = dizi[i]<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            count[index] -= 1<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            i -= 1<br>
+                            <br><span style="display: inline-block; margin-left: 40px;">
+                        for i in range(n):<br><span style="display: inline-block; margin-left: 80px;"></span>
+                            dizi[i] = output[i]
+                </h3>
+            </div>
+            <div class="description-panel">
+                <h3>Radix Sort, basamaklarına göre gruplara ayrılarak sıralama yapar.
+                    İlk önce bir basamağa göre sıralama yapılır, ardından diğer basamaklara geçilir.
+                    Dizi elemanlarının sayısı (n) ve basamak sayısı (k) arasında doğrusal bir ilişki vardır.
+                    En iyi, ortalam ve en kötü durumlarda O(nk) zaman karmaşıklığına sahiptir.</h3>
+            </div>
+            <div class="clearfix"></div>
         </div>
     </div>
+    
     <script src="script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const body = document.body;
-            const settingsButton = document.getElementById('settingsButton');
-            const settingsPanel = document.getElementById('settingsPanel');
-            const themeSelect = document.getElementById('themeSelect');
-            const languageSelect = document.getElementById('languageSelect');
-            const sortButtons = document.querySelectorAll('.top-panel button');
-
-            // Ayarlar panelini gösterme/gizleme işlevi
-            settingsButton.addEventListener('click', () => {
-                if (settingsPanel.style.display === 'block') {
-                    settingsPanel.style.display = 'none';
-                } else {
-                    settingsPanel.style.display = 'block';
-                }
-            });
-
-            // Tema değiştirme işlevi
-            themeSelect.addEventListener('change', (e) => {
-                if (e.target.value === 'dark') {
-                    body.classList.add('theme-dark');
-                    body.classList.remove('theme-light');
-                } else {
-                    body.classList.add('theme-light');
-                    body.classList.remove('theme-dark');
-                }
-            });
-
-            // Dil değiştirme işlevi
-            languageSelect.addEventListener('change', (e) => {
-                if (e.target.value === 'tr') {
-                    document.documentElement.lang = 'tr';
-                } else {
-                    document.documentElement.lang = 'en';
-                }
-            });
-
-            // Algoritma butonlarına tıklama işlevleri
-            sortButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const algorithmId = this.id.replace('Btn', '');
-                    showAlgorithm(algorithmId);
-                });
-            });
-
-            // Sıralama algoritma bilgilerini gösterme işlevi
-            function showAlgorithm(algorithmId) {
-                const algorithms = document.querySelectorAll('.algorithm-container');
-                algorithms.forEach(algo => {
-                    algo.style.display = 'none';
-                });
-                document.getElementById(algorithmId).style.display = 'flex';
-            }
-
-            // Diziyi sıralama işlevi
-            document.getElementById('sortButton').addEventListener('click', function() {
-                const arrayInput = document.getElementById('arrayInput').value;
-                const numbers = arrayInput.split(',').map(num => parseInt(num.trim()));
-                
-                // Seçilen algoritmaya göre sıralama yapma
-                const selectedAlgorithm = document.querySelector('.algorithm-container[style*="display: flex"]');
-                const algorithmId = selectedAlgorithm ? selectedAlgorithm.id : null;
-                let sortedNumbers = [];
-                if (algorithmId === 'bubbleSort') {
-                    sortedNumbers = bubbleSort(numbers);
-                } else if (algorithmId === 'selectionSort') {
-                    sortedNumbers = selectionSort(numbers);
-                } else if (algorithmId === 'insertionSort') {
-                    sortedNumbers = insertionSort(numbers);
-                }
-
-                // Sıralanmış diziyi ekrana yazdırma
-                const sortedArray = document.getElementById('sortedArray');
-                sortedArray.textContent = sortedNumbers.join(', ');
-            });
-
-            // Temizle butonu işlevi
-            document.getElementById('clearButton').addEventListener('click', function() {
-                document.getElementById('arrayInput').value = '';
-                document.getElementById('sortedArray').textContent = 'Sıralanmış dizi burada gösterilecek.';
-            });
-
-            // Bubble Sort algoritması
-            function bubbleSort(arr) {
-                const len = arr.length;
-                for (let i = 0; i < len - 1; i++) {
-                    for (let j = 0; j < len - 1 - i; j++) {
-                        if (arr[j] > arr[j + 1]) {
-                            const temp = arr[j];
-                            arr[j] = arr[j + 1];
-                            arr[j + 1] = temp;
-                        }
-                    }
-                }
-                return arr;
-            }
-
-            // Selection Sort algoritması ve adımları
-            function selectionSort(arr) {
-                const len = arr.length;
-                const steps = [];
-                for (let i = 0; i < len - 1; i++) {
-                    let minIndex = i;
-                    for (let j = i + 1; j < len; j++) {
-                        if (arr[j] < arr[minIndex]) {
-                            minIndex = j;
-                        }
-                    }
-                    if (minIndex !== i) {
-                        const temp = arr[i];
-                        arr[i] = arr[minIndex];
-                        arr[minIndex] = temp;
-                        steps.push(`Adım ${i + 1}: ${arr.join(', ')}`);
-                    }
-                }
-                displaySelectionSortSteps(steps);
-                return arr;
-            }
-
-            // Selection Sort adımlarını görüntüleme işlevi
-            function displaySelectionSortSteps(steps) {
-                const stepsContainer = document.querySelector('.algorithm-steps-selection');
-                stepsContainer.innerHTML = '';
-                steps.forEach(step => {
-                    const stepElement = document.createElement('p');
-                    stepElement.textContent = step;
-                    stepsContainer.appendChild(stepElement);
-                });
-            }
-
-            // Selection Sort butonuna tıklama işlevi
-            document.getElementById('selectionSortBtn').addEventListener('click', function() {
-                const arrayInput = document.getElementById('arrayInput').value;
-                const numbers = arrayInput.split(',').map(num => parseInt(num.trim()));
-                const sortedNumbers = selectionSort(numbers);
-                document.getElementById('sortedArray').textContent = sortedNumbers.join(', ');
-            });
-
-            // Insertion Sort algoritması ve adımları
-            function insertionSort(arr) {
-                const len = arr.length;
-                const steps = [];
-                for (let i = 1; i < len; i++) {
-                    let key = arr[i];
-                    let j = i - 1;
-                    while (j >= 0 && arr[j] > key) {
-                        arr[j + 1] = arr[j];
-                        j = j - 1;
-                    }
-                    arr[j + 1] = key;
-                    steps.push(`Adım ${i}: ${arr.join(', ')}`);
-                }
-                displayInsertionSortSteps(steps);
-                return arr;
-            }
-
-            // Insertion Sort adımlarını görüntüleme işlevi
-            function displayInsertionSortSteps(steps) {
-                const stepsContainer = document.querySelector('.algorithm-steps-insertion');
-                stepsContainer.innerHTML = '';
-                steps.forEach(step => {
-                    const stepElement = document.createElement('p');
-                    stepElement.textContent = step;
-                    stepsContainer.appendChild(stepElement);
-                });
-            }
-
-            // Insertion Sort butonuna tıklama işlevi
-            document.getElementById('insertionSortBtn').addEventListener('click', function() {
-                const arrayInput = document.getElementById('arrayInput').value;
-                const numbers = arrayInput.split(',').map(num => parseInt(num.trim()));
-                const sortedNumbers = insertionSort(numbers);
-                document.getElementById('sortedArray').textContent = sortedNumbers.join(', ');
-            });
-
-        });
-    </script>
 </body>
 </html>

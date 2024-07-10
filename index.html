@@ -126,6 +126,31 @@
       color: white;
       transform: scale(1.05);
     }
+
+    .centered-div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .centered-div button {
+      display: block;
+      width: 100%;
+      max-width: 100px;
+      text-align: center;
+      padding: 15px;
+      margin: 10px 0;
+      /* Butonlar arasında boşluk */
+    }
+
+    .input-panel, .result-panel{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
   </style>
 </head>
 
@@ -189,27 +214,35 @@
     </div>
 
     <div id="selection" class="algorithm-panel">
-      <div class="algorithm-info">
-        <h2>Selection Sort</h2>
-        <p>En iyi durum: O(n^2)
-          Ortalama durum: O(n^2)
-          En kötü durum: O(n^2)
-          Karmaşıklık denklemi: O(n^2)</p>
+
+      <div class="centered-div">
+        <div class="algorithm-info">
+          <h2>Selection Sort</h2>
+          <p>En iyi durum: O(n^2) <br>
+            Ortalama durum: O(n^2) <br>
+            En kötü durum: O(n^2) <br>
+            Karmaşıklık denklemi: O(n^2)</p>
+        </div>
+        <div class="step-panel">
+          <h3>Adım Adım Gösterim</h3>
+          <div id="selection-steps"></div>
+        </div>
+        <div class="input-panel">
+          <h3>Dizi Girişi</h3>
+          <input type="text" id="selection-input" placeholder="Ör: 5,3,8,6,2">
+          <button class="sortButton" onclick="sortSelection()">Sırala</button>
+        </div>
+        <div class="result-panel">
+          <h3>Sıralanmış Dizi</h3>
+          <div id="selection-result"></div>
+          <button class="clearButton" onclick="clearSelection()">Temizle</button>
+        </div>
       </div>
-      <div class="step-panel">
-        <h3>Adım Adım Gösterim</h3>
-        <div id="selection-steps"></div>
-      </div>
-      <div class="input-panel">
-        <h3>Dizi Girişi</h3>
-        <input type="text" id="selection-input" placeholder="Ör: 5,3,8,6,2">
-        <button class="sortButton" onclick="sortSelection()">Sırala</button>
-      </div>
-      <div class="result-panel">
-        <h3>Sıralanmış Dizi</h3>
-        <div id="selection-result"></div>
-        <button class="clearButton" onclick="clearSelection()">Temizle</button>
-      </div>
+
+
+
+
+
       <div class="code-panel">
         <h3>SelectionSort(dizi):<br>
           n = dizi.length<br>
@@ -224,9 +257,9 @@
         </h3>
       </div>
       <div class="description-panel">
-        <h3>Selection Sort, dizinin en küçük (ya da en büyük) elemanını bulup sıralı kısmın sonuna ekler.
-          Her adımda sıralı kısım genişler ve sıralanmış elemanlar arasında en küçük (ya da en büyük) elemanı seçer.
-          Bu işlem dizinin tamamı için tekrarlanarak dizi sıralanır.
+        <h3>Selection Sort, dizinin en küçük (ya da en büyük) elemanını bulup sıralı kısmın sonuna ekler. <br><br>
+          Her adımda sıralı kısım genişler ve sıralanmış elemanlar arasında en küçük (ya da en büyük) elemanı seçer. <br><br>
+          Bu işlem dizinin tamamı için tekrarlanarak dizi sıralanır. <br><br>
           En iyi, ortalam ve en kötü durumlarda O(n^2) zaman karmaşıklığına sahiptir.</h3>
       </div>
       <div class="clearfix"></div>
